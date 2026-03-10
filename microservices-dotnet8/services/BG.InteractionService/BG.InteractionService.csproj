@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <AssemblyName>BG.InteractionService</AssemblyName>
+    <RootNamespace>BG.InteractionService</RootNamespace>
+  </PropertyGroup>
+</Project>

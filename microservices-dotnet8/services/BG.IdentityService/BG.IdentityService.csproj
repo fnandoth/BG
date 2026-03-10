@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <AssemblyName>BG.IdentityService</AssemblyName>
+    <RootNamespace>BG.IdentityService</RootNamespace>
+  </PropertyGroup>
+</Project>

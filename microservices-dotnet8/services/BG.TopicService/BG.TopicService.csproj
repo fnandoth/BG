@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <AssemblyName>BG.TopicService</AssemblyName>
+    <RootNamespace>BG.TopicService</RootNamespace>
+  </PropertyGroup>
+</Project>

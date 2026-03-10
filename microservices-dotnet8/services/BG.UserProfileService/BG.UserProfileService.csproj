@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <AssemblyName>BG.UserProfileService</AssemblyName>
+    <RootNamespace>BG.UserProfileService</RootNamespace>
+  </PropertyGroup>
+</Project>

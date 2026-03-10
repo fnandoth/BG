@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <AssemblyName>BG.NotificationService</AssemblyName>
+    <RootNamespace>BG.NotificationService</RootNamespace>
+  </PropertyGroup>
+</Project>
