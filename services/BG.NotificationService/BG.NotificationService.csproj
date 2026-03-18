@@ -3,4 +3,7 @@
     <AssemblyName>BG.NotificationService</AssemblyName>
     <RootNamespace>BG.NotificationService</RootNamespace>
   </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="BG.SharedKernel" Version="1.2.0" />
+	</ItemGroup>
 </Project>
