@@ -4,6 +4,6 @@
     <RootNamespace>BG.TopicService</RootNamespace>
   </PropertyGroup>
 	<ItemGroup>
-		<ProjectReference Include="BG.SharedKernel" Version="1.2.0" />
+		<ProjectReference Include="..\..\SharedKernel\SharedKernel.csproj" />
 	</ItemGroup>
 </Project>
