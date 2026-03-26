@@ -295,6 +295,9 @@ ServiceFabricBackup/
 *.ldf
 *.ndf
 
+# Secret key 
+appsettings.Development.json
+
 # Business Intelligence projects
 *.rdl.data
 *.bim.layout

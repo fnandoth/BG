@@ -1,9 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
-  <PropertyGroup>
-    <AssemblyName>BG.SocialGraphService</AssemblyName>
-    <RootNamespace>BG.SocialGraphService</RootNamespace>
-  </PropertyGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\..\SharedKernel\SharedKernel.csproj" />
-	</ItemGroup>
-</Project>

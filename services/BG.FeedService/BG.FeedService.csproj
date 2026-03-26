@@ -1,9 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
-  <PropertyGroup>
-    <AssemblyName>BG.FeedService</AssemblyName>
-    <RootNamespace>BG.FeedService</RootNamespace>
-  </PropertyGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\..\SharedKernel\SharedKernel.csproj" />
-	</ItemGroup>
-</Project>
