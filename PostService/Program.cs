@@ -1,3 +1,4 @@
+using MassTransit;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using PostService.Domain.Interfaces;
@@ -20,6 +21,18 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<ILikeRepository, LikeRepository>();
+
+builder.Services.AddMassTransit(x =>
+{
+    x.UsingRabbitMq((ctx, cfg) =>
+    {
+        cfg.Host("rabbitmq://localhost", h => // Configuración de autenticación para RabbitMQ TODO: Añadir las credenciales correctas
+        {
+            h.Username("guest");
+            h.Password("guest");
+        });
+    });
+});
 
 
 
