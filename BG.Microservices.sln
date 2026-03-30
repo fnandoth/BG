@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationService", "Noti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{221AFC15-FA7D-418C-A434-B501CB65B70D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GatewayService", "GatewayService\GatewayService.csproj", "{4630B11D-2861-4594-8C1A-D7329810992F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{221AFC15-FA7D-418C-A434-B501CB65B70D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{221AFC15-FA7D-418C-A434-B501CB65B70D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{221AFC15-FA7D-418C-A434-B501CB65B70D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4630B11D-2861-4594-8C1A-D7329810992F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4630B11D-2861-4594-8C1A-D7329810992F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4630B11D-2861-4594-8C1A-D7329810992F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4630B11D-2861-4594-8C1A-D7329810992F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
