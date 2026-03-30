@@ -1,9 +1,11 @@
 ﻿using UserService.Aplication.DTOs;
+using UserService.Domain.Entities;
 
 namespace UserService.Domain.Interfaces
 {
     public interface IUserRepository
     { 
+        Task<User> GetUserByIdAsync(Guid id);
         Task<IEnumerable<UserPlainDTO>> GetAllUsersAsync();
         Task<UserPlainDTO> GetUserByNameAsync(string displayName);
         Task<UserResponseDTO> RegisterAsync(UserDTO user);

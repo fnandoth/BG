@@ -1,6 +1,7 @@
 ﻿using BCrypt.Net;
 using Microsoft.EntityFrameworkCore;
 using UserService.Aplication.DTOs;
+using UserService.Domain.Entities;
 using UserService.Domain.Interfaces;
 
 namespace UserService.Infrastructure.Data.Repositories
@@ -92,6 +93,14 @@ namespace UserService.Infrastructure.Data.Repositories
         }
 
         // ─── Queries ──────────────────────────────────────────────────────────────
+        // esta tarea no deberia existir segun mi idea general pero es necesaria de momento, voy a buscar en un futuro como remplazarla por algo mas acorde 
+        public async Task<User> GetUserByIdAsync(Guid id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+                throw new InvalidOperationException($"No se pudo encontrar el usuario con ID '{id}'.");
+            return user;
+        }
 
         public async Task<IEnumerable<UserPlainDTO>> GetAllUsersAsync()
         {
