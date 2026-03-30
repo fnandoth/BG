@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using UserService.Aplication.DTOs;
 using UserService.Domain.Interfaces;
 
@@ -43,15 +45,35 @@ namespace UserService.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserLoginDTO user)
         {
-            var success = await _userRepository.LoginAsync(user);
+            var auth = await _userRepository.LoginAsync(user);
 
-            if (!success)
+            if (auth is null)
                 return Unauthorized(new { message = $"Credenciales incorrectas para el usuario '{user.UserName}'." });
 
-            return Ok(new { message = "Login exitoso." });
+            return Ok(auth);
         }
 
 
+        [Authorize]
+        [HttpGet("me")]
+        public IActionResult Me()
+        {
+            var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userName = User.FindFirstValue(ClaimTypes.Name);
+            var displayName = User.FindFirstValue("display_name");
+            var avatarUrl = User.FindFirstValue("avatar_url");
+
+            return Ok(new
+            {
+                id,
+                userName,
+                displayName,
+                avatarUrl
+            });
+        }
+
+
+        [Authorize]
         [HttpPut]
         public async Task<IActionResult> UpdateUser([FromBody] UserUpdateDTO user)
         {
@@ -60,6 +82,7 @@ namespace UserService.Controllers
         }
 
 
+        [Authorize]
         [HttpDelete]
         public async Task<IActionResult> DeleteUser([FromBody] UserLoginDTO user)
         {
@@ -67,18 +90,26 @@ namespace UserService.Controllers
             return NoContent();
         }
 
-        [HttpPost("{followerDisplayName}/follow/{followeeDisplayName}")]
-        public async Task<IActionResult> FollowUser(string followerDisplayName, string followeeDisplayName)
+        [Authorize]
+        [HttpPost("follow/{followeeDisplayName}")]
+        public async Task<IActionResult> FollowUser(string followeeDisplayName)
         {
+            var followerDisplayName = User.FindFirstValue("display_name")
+                ?? throw new UnauthorizedAccessException("El token no contiene el claim 'display_name'.");
+
             var success = await _userRepository.FollowUserAsync(followerDisplayName, followeeDisplayName);
             if (!success)
                 return BadRequest(new { message = $"No se pudo seguir al usuario '{followeeDisplayName}'." });
             return Ok(new { message = $"'{followerDisplayName}' ahora sigue a '{followeeDisplayName}'." });
         }
 
-        [HttpDelete("{followerDisplayName}/unfollow/{followeeDisplayName}")]
-        public async Task<IActionResult> UnfollowUser(string followerDisplayName, string followeeDisplayName)
+        [Authorize]
+        [HttpDelete("unfollow/{followeeDisplayName}")]
+        public async Task<IActionResult> UnfollowUser(string followeeDisplayName)
         {
+            var followerDisplayName = User.FindFirstValue("display_name")
+                ?? throw new UnauthorizedAccessException("El token no contiene el claim 'display_name'.");
+
             var success = await _userRepository.UnfollowUserAsync(followerDisplayName, followeeDisplayName);
             if (!success)
                 return BadRequest(new { message = $"No se pudo dejar de seguir al usuario '{followeeDisplayName}'." });

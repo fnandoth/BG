@@ -3,16 +3,19 @@ using Microsoft.EntityFrameworkCore;
 using UserService.Aplication.DTOs;
 using UserService.Domain.Entities;
 using UserService.Domain.Interfaces;
+using UserService.Infrastructure.Security;
 
 namespace UserService.Infrastructure.Data.Repositories
 {
     public class UserRepository : IUserRepository
     {
         private readonly UserContext _context;
+        private readonly JwtTokenService _jwtTokenService;
 
-        public UserRepository(UserContext context)
+        public UserRepository(UserContext context, JwtTokenService jwtTokenService)
         {
             _context = context;
+            _jwtTokenService = jwtTokenService;
         }
 
         // ─── Privado: obtener usuario por nombre ──────────────────────────────────
@@ -25,17 +28,28 @@ namespace UserService.Infrastructure.Data.Repositories
 
         // ─── Login ────────────────────────────────────────────────────────────────
 
-        public async Task<bool> LoginAsync(UserLoginDTO user)
+        public async Task<AuthResponseDTO?> LoginAsync(UserLoginDTO user)
         {
             var existingUser = await _context.Users
                 .FirstOrDefaultAsync(u => u.UserName == user.UserName);
 
             if (existingUser == null)
-                return false;
+                return null;
 
             try
             {
-                return BCrypt.Net.BCrypt.Verify(user.Password, existingUser.Password);
+                var validPassword = BCrypt.Net.BCrypt.Verify(user.Password, existingUser.Password);
+                if (!validPassword)
+                    return null;
+
+                var (token, expiresAt) = _jwtTokenService.GenerateAccessToken(existingUser);
+
+                return new AuthResponseDTO
+                {
+                    AccessToken = token,
+                    ExpiresAt = expiresAt,
+                    User = existingUser.ToResponseDTO()
+                };
             }
             catch (SaltParseException)
             {
@@ -65,9 +79,9 @@ namespace UserService.Infrastructure.Data.Repositories
 
         public async Task<bool> DeleteUserAsync(UserLoginDTO user)
         {
-            var trust = await LoginAsync(user);
+            var auth = await LoginAsync(user);
 
-            if (!trust)
+            if (auth is null)
                 throw new UnauthorizedAccessException(
                     $"Contraseña incorrecta para el usuario '{user.UserName}'.");
 
@@ -80,7 +94,7 @@ namespace UserService.Infrastructure.Data.Repositories
         }
 
         // ─── Update ───────────────────────────────────────────────────────────────
-
+        // TODO: necesita añadir seguridad solo el perfil dueño puede actualizar su perfil, usar el token 
         public async Task<UserResponseDTO> UpdateUserAsync(UserUpdateDTO user)
         {
             var userToUpdate = await GetUserEntityByNameAsync(user.UserName);

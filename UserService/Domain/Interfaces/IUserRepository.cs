@@ -9,7 +9,7 @@ namespace UserService.Domain.Interfaces
         Task<IEnumerable<UserPlainDTO>> GetAllUsersAsync();
         Task<UserPlainDTO> GetUserByNameAsync(string displayName);
         Task<UserResponseDTO> RegisterAsync(UserDTO user);
-        Task<bool> LoginAsync(UserLoginDTO user);
+        Task<AuthResponseDTO?> LoginAsync(UserLoginDTO user);
         Task<bool> FollowUserAsync(string followerDisplayName, string followeeDisplayName);
         Task<bool> UnfollowUserAsync(string followerDisplayName, string followeeDisplayName);
         Task<IEnumerable<UserPlainDTO>> GetFollowersAsync(string displayName);
