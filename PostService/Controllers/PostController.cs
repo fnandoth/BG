@@ -63,7 +63,7 @@ namespace PostService.Controllers
                     ReplierAvatarUrl: CurrentAvatar), ct);
             }
 
-            return CreatedAtAction(nameof(GetPostDetailAsync), new { postId = post.Id }, post);
+            return CreatedAtRoute("GetPostDetail", new { postId = post.Id }, post);
         }
 
         // ─── Delete ───────────────────────────────────────────────────────────────
@@ -78,7 +78,7 @@ namespace PostService.Controllers
         // ─── Get post detallado ───────────────────────────────────────────────────
 
         [AllowAnonymous]
-        [HttpGet("{postId:guid}")]
+        [HttpGet("{postId:guid}", Name = "GetPostDetail")]
         public async Task<IActionResult> GetPostDetailAsync(Guid postId)
         {
             var post = await _postRepository.GetPostDetailAsync(postId);
@@ -166,7 +166,7 @@ namespace PostService.Controllers
             request.PostType = PostType.Quote;
 
             var quote = await _postRepository.QuotePostAsync(request, CurrentUserId, CurrentAuthorSnapshot);
-            return CreatedAtAction(nameof(GetPostDetailAsync), new { postId = quote.Id }, quote);
+            return CreatedAtRoute("GetPostDetail", new { postId = quote.Id }, quote);
         }
     }
 }

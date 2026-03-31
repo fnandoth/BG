@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GatewayService", "GatewayService\GatewayService.csproj", "{4630B11D-2861-4594-8C1A-D7329810992F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostService.IntegrationTests", "PostService.IntegrationTests\PostService.IntegrationTests.csproj", "{84BABF47-205C-4755-9FF0-1CD11CAD2B5A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{4630B11D-2861-4594-8C1A-D7329810992F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4630B11D-2861-4594-8C1A-D7329810992F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4630B11D-2861-4594-8C1A-D7329810992F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84BABF47-205C-4755-9FF0-1CD11CAD2B5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84BABF47-205C-4755-9FF0-1CD11CAD2B5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84BABF47-205C-4755-9FF0-1CD11CAD2B5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84BABF47-205C-4755-9FF0-1CD11CAD2B5A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
