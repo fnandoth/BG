@@ -16,11 +16,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContext<NotificationsContext>(options =>
 {
-    options.UseNpgsql(builder.Configuration.GetConnectionString("Default"));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DbConnection"));
 });
 builder.Services.AddHealthChecks()
-    .AddNpgSql(builder.Configuration.GetConnectionString("Default")
-        ?? throw new InvalidOperationException("Connection string 'Default' is not configured"));
+    .AddNpgSql(builder.Configuration.GetConnectionString("DbConnection")
+        ?? throw new InvalidOperationException("Connection string 'DbConnection' is not configured"));
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
@@ -63,7 +63,11 @@ builder.Services.AddMassTransit(x =>
     x.AddConsumer<UserFollowedConsumer>();  // UserService
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host(builder.Configuration.GetConnectionString("RabbitMQ") ?? throw new InvalidOperationException("Connection string 'RabbitMQ' is not configured"));
+        cfg.Host(new Uri(builder.Configuration["RabbtiMQ:Host"]!), h =>
+        {
+            h.Username(builder.Configuration["RabbtiMQ:Username"]!);
+            h.Password(builder.Configuration["RabbtiMQ:Password"]!);
+        });
         cfg.ConfigureEndpoints(context);
     });
 });

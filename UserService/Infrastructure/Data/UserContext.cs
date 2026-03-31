@@ -22,6 +22,21 @@ namespace UserService.Infrastructure.Data
                 entity.Property(e => e.Email).IsRequired();
                 entity.Property(e => e.DisplayName).IsRequired().HasMaxLength(32);
             });
+
+            modelBuilder.Entity<Follow>(entity =>
+            {
+                entity.HasKey(e => new { e.FollowerId, e.FollowingId });
+
+                entity.HasOne(f => f.Follower)
+                      .WithMany()
+                      .HasForeignKey(f => f.FollowerId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(f => f.Following)
+                      .WithMany()
+                      .HasForeignKey(f => f.FollowingId)
+                      .OnDelete(DeleteBehavior.Restrict);
+            });
         }
 
 

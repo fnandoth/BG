@@ -12,7 +12,25 @@ namespace NotificationService.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(NotificationsContext).Assembly);
+            modelBuilder.Entity<Notification>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Type)
+                      .HasConversion<string>();   
+
+                // ActorSnapshot → JSONB 
+                entity.OwnsOne(e => e.ActorSnapshot, actor =>
+                {
+                    actor.ToJson();
+                });
+
+                // EntitySnapshot → JSONB 
+                entity.OwnsOne(e => e.EntitySnapshot, snapshot =>
+                {
+                    snapshot.ToJson();
+                });
+            });
         }
     }
 }

@@ -1,0 +1,160 @@
+services:
+
+  # ─── GATEWAY (YARP) ───────────────────────────────────────────
+  gateway-service:
+    build:
+      context: .
+      dockerfile: GatewayService/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      user-service:
+        condition: service_healthy
+      post-service:
+        condition: service_healthy
+      notification-service:
+        condition: service_healthy
+
+  # ─── USER SERVICE ─────────────────────────────────────────────
+  user-service:
+    build:
+      context: .
+      dockerfile: UserService/Dockerfile
+    ports:
+      - "5050:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DbConnection=Host=user-db;Database=user_db;Username=user_svc;Password=${USER_DB_PASSWORD}
+      - RabbtiMQ__Host=amqp://rabbitmq:5672
+      - RabbtiMQ__Username=guest
+      - RabbtiMQ__Password=${RABBITMQ_PASSWORD}
+    depends_on:
+      user-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  user-db:
+    image: postgres:16-alpine
+    container_name: user-db
+    environment:
+      POSTGRES_USER: user_svc
+      POSTGRES_PASSWORD: ${USER_DB_PASSWORD}
+      POSTGRES_DB: user_db
+    volumes:
+      - user_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user_svc -d user_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─── POST SERVICE ─────────────────────────────────────────────
+  post-service:
+    build:
+      context: .
+      dockerfile: PostService/Dockerfile
+    ports:
+      - "5137:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DbConnection=Host=post-db;Database=post_db;Username=post_svc;Password=${POST_DB_PASSWORD}
+      - RabbtiMQ__Host=amqp://rabbitmq:5672
+      - RabbtiMQ__Username=guest
+      - RabbtiMQ__Password=${RABBITMQ_PASSWORD}
+    depends_on:
+      post-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  post-db:
+    image: postgres:16-alpine
+    container_name: post-db
+    environment:
+      POSTGRES_USER: post_svc
+      POSTGRES_PASSWORD: ${POST_DB_PASSWORD}
+      POSTGRES_DB: post_db
+    volumes:
+      - post_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U post_svc -d post_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─── NOTIFICATION SERVICE ─────────────────────────────────────
+  notification-service:
+    build:
+      context: .
+      dockerfile: NotificationService/Dockerfile
+    ports:
+      - "5281:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DbConnection=Host=notification-db;Database=notification_db;Username=notification_svc;Password=${NOTIFICATION_DB_PASSWORD}
+      - RabbtiMQ__Host=amqp://rabbitmq:5672
+      - RabbtiMQ__Username=guest
+      - RabbtiMQ__Password=${RABBITMQ_PASSWORD}
+    depends_on:
+      notification-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  notification-db:
+    image: postgres:16-alpine
+    container_name: notification-db
+    environment:
+      POSTGRES_USER: notification_svc
+      POSTGRES_PASSWORD: ${NOTIFICATION_DB_PASSWORD}
+      POSTGRES_DB: notification_db
+    volumes:
+      - notification_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U notification_svc -d notification_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─── RABBITMQ ─────────────────────────────────────────────────
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"    # AMQP
+      - "15672:15672"  # Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+# ─── VOLUMES ────────────────────────────────────────────────────
+volumes:
+  user_db_data:
+  post_db_data:
+  notification_db_data:
+  rabbitmq_data:

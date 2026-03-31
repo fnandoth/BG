@@ -7,8 +7,8 @@
         public DateTimeOffset CreatedAt { get; set; } = default;
 
         // navegacion 
-        public Aplication.DTOs.UserPlainDTO? Following { get; set; }
-        public Aplication.DTOs.UserPlainDTO? Follower { get; set; }
+        public User? Following { get; set; }
+        public User? Follower { get; set; }
     }
 
 }
