@@ -1,0 +1,99 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 245 245 245;
+  --foreground: 26 26 26;
+  --card: 255 255 255;
+  --border: 232 232 232;
+  --muted: 240 240 240;
+  --muted-foreground: 102 102 102;
+  --accent: 215 25 33;
+  --accent-foreground: 255 255 255;
+}
+
+.dark {
+  --background: 0 0 0;
+  --foreground: 232 232 232;
+  --card: 17 17 17;
+  --border: 34 34 34;
+  --muted: 26 26 26;
+  --muted-foreground: 153 153 153;
+  --accent: 215 25 33;
+  --accent-foreground: 255 255 255;
+}
+
+html {
+  color-scheme: light;
+  background: rgb(var(--background));
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+body {
+  @apply bg-background text-foreground antialiased;
+  min-height: 100vh;
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  background-image: radial-gradient(circle at 1px 1px, rgb(var(--border) / 0.42) 1px, transparent 0);
+  background-size: 22px 22px;
+}
+
+* {
+  @apply border-border;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+button,
+a,
+input,
+textarea {
+  transition-duration: 180ms;
+  transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+::selection {
+  @apply bg-accent/20 text-foreground;
+}
+
+@layer components {
+  .ui-mono {
+    font-family: "Space Mono", monospace;
+  }
+
+  .panel-label {
+    font-family: "Space Mono", monospace;
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgb(var(--muted-foreground));
+  }
+
+  .panel-card {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .panel-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto auto 0;
+    height: 1px;
+    width: 100%;
+    background: rgb(var(--border));
+    opacity: 0.8;
+  }
+}

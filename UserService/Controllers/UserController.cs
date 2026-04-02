@@ -1,8 +1,10 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using UserService.Aplication.Command;
 using UserService.Aplication.DTOs;
 using UserService.Domain.Interfaces;
+using UserService.Domain.ValueObjects;
 
 namespace UserService.Controllers
 {
@@ -11,10 +13,13 @@ namespace UserService.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
+        private readonly CreateFollowHandler _createFollowHandler;
 
-        public UserController(IUserRepository userRepository)
+
+        public UserController(IUserRepository userRepository, CreateFollowHandler createFollowHandler)
         {
             _userRepository = userRepository;
+            _createFollowHandler = createFollowHandler;
         }
 
 
@@ -92,7 +97,7 @@ namespace UserService.Controllers
 
         [Authorize]
         [HttpPost("follow/{followeeDisplayName}")]
-        public async Task<IActionResult> FollowUser(string followeeDisplayName)
+        public async Task<IActionResult> FollowUser(string followeeDisplayName, CancellationToken ct)
         {
             var followerDisplayName = User.FindFirstValue("display_name")
                 ?? throw new UnauthorizedAccessException("El token no contiene el claim 'display_name'.");
@@ -100,6 +105,23 @@ namespace UserService.Controllers
             var success = await _userRepository.FollowUserAsync(followerDisplayName, followeeDisplayName);
             if (!success)
                 return BadRequest(new { message = $"No se pudo seguir al usuario '{followeeDisplayName}'." });
+
+            if (success)
+            {
+                // obtenemos los IDs de los usuarios para enviar el evento
+                var follower = await _userRepository.GetUserEntityByNameAsync(followerDisplayName);
+                var followee = await _userRepository.GetUserEntityByNameAsync(followeeDisplayName);
+
+                await _createFollowHandler.HandleAsync( new CreateFollowCommand(
+                    FollowedUserId: followee.Id,
+                    FollowerUserId: follower.Id,
+                    FollowerUsername: follower.UserName,
+                    FollowerDisplayName: follower.DisplayName,
+                    FollowerAvatarUrl: follower.AvatarUrl
+                ), ct);
+            }
+
+
             return Ok(new { message = $"'{followerDisplayName}' ahora sigue a '{followeeDisplayName}'." });
         }
 

@@ -42,13 +42,13 @@ namespace PostService.Controllers
             if (liked)
             {
                 await _createLikeHandler.HandleAsync(new CreateLikeCommand
-                {
-                    PostId = postId,
-                    UserId = CurrentUserId,
-                    Username = CurrentUsername,
-                    DisplayName = CurrentDisplayName,
-                    AvatarUrl = CurrentAvatar
-                }, ct);
+                (
+                    UserId: CurrentUserId,
+                    PostId: postId,
+                    Username: CurrentUsername,
+                    DisplayName: CurrentDisplayName,
+                    AvatarUrl: CurrentAvatar
+                ), ct);
             }
 
             return Ok(new { liked });

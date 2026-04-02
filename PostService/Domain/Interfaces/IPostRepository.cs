@@ -12,10 +12,10 @@ namespace PostService.Domain.Interfaces
         Task<bool> DeleteAsync(Guid postId, Guid requesterId);
 
         // ─── Lectura ──────────────────────────────────────────────────────────────
-        Task<IEnumerable<TimelinePostDto>> GetTimelineAsync(Guid userId, int page, int pageSize);
+        Task<IEnumerable<TimelinePostDto>> GetTimelineAsync(string displayName, int page, int pageSize);
         Task<PostDetailDto?> GetPostDetailAsync(Guid postId);
         Task<IEnumerable<PostDetailDto>> GetRepliesAsync(Guid postId, int page, int pageSize);
         Task<IEnumerable<PostSummaryDto>> GetQuotesAsync(Guid postId, int page, int pageSize);
-        Task<IEnumerable<TimelinePostDto>> GetUserPostsAsync(Guid userId, int page, int pageSize);
+        Task<IEnumerable<TimelinePostDto>> GetUserPostsAsync(string displayName, int page, int pageSize);
     }
 }

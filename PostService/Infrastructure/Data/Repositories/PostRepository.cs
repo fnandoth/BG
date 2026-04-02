@@ -105,11 +105,11 @@ namespace PostService.Infrastructure.Data.Repositories
 
         // ─── Get timeline ─────────────────────────────────────────────────────────
 
-        public async Task<IEnumerable<TimelinePostDto>> GetTimelineAsync(Guid userId, int page, int pageSize)
+        public async Task<IEnumerable<TimelinePostDto>> GetTimelineAsync(string displayName, int page, int pageSize)
         {
             var posts = await _context.Posts
                 .Include(p => p.QuotedPost)
-                .Where(p => p.AuthorId == userId && !p.IsDeleted)
+                .Where(p => p.AuthorSnapshot.DisplayName == displayName && !p.IsDeleted)
                 .OrderByDescending(p => p.CreatedAt)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
@@ -120,11 +120,11 @@ namespace PostService.Infrastructure.Data.Repositories
 
         // ─── Get posts de un usuario ──────────────────────────────────────────────
 
-        public async Task<IEnumerable<TimelinePostDto>> GetUserPostsAsync(Guid userId, int page, int pageSize)
+        public async Task<IEnumerable<TimelinePostDto>> GetUserPostsAsync(string displayName, int page, int pageSize)
         {
             var posts = await _context.Posts
                 .Include(p => p.QuotedPost)
-                .Where(p => p.AuthorId == userId
+                .Where(p => p.AuthorSnapshot.DisplayName == displayName
                          && p.PostType != PostType.Reply
                          && !p.IsDeleted)
                 .OrderByDescending(p => p.CreatedAt)

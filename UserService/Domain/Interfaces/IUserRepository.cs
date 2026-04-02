@@ -5,6 +5,7 @@ namespace UserService.Domain.Interfaces
 {
     public interface IUserRepository
     { 
+        Task<User> GetUserEntityByNameAsync(string DisplayName);
         Task<User> GetUserByIdAsync(Guid id);
         Task<IEnumerable<UserPlainDTO>> GetAllUsersAsync();
         Task<UserPlainDTO> GetUserByNameAsync(string displayName);

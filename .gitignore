@@ -429,3 +429,37 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# --- Frontend (Node) en /web ---
+
+# Dependencias
+web/node_modules/
+
+# Build outputs
+web/dist/
+web/build/
+web/.next/
+web/out/
+
+# Logs
+web/npm-debug.log*
+web/yarn-debug.log*
+web/yarn-error.log*
+web/pnpm-debug.log*
+
+# Env files
+web/.env
+web/.env.*
+!web/.env.example
+
+# Cache
+web/.cache/
+web/.turbo/
+web/.vite/
+
+# Coverage
+web/coverage/
+
+# OS / misc
+web/.DS_Store
+web/Thumbs.db

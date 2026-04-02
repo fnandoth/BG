@@ -18,12 +18,12 @@ namespace UserService.Infrastructure.Data.Repositories
             _jwtTokenService = jwtTokenService;
         }
 
-        // ─── Privado: obtener usuario por nombre ──────────────────────────────────
+        // ─── Privado: obtener usuario por nombre (ya no xd)──────────────────────────────────
 
-        private async Task<Domain.Entities.User> GetUserEntityByNameAsync(string userName)
+        public async Task<Domain.Entities.User> GetUserEntityByNameAsync(string DisplayName)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.UserName == userName)
-                ?? throw new InvalidOperationException($"No se pudo encontrar el usuario '{userName}'");
+            return await _context.Users.FirstOrDefaultAsync(u => u.DisplayName == DisplayName)
+                ?? throw new InvalidOperationException($"No se pudo encontrar el usuario '{DisplayName}'");
         }
 
         // ─── Login ────────────────────────────────────────────────────────────────
@@ -148,6 +148,7 @@ namespace UserService.Infrastructure.Data.Repositories
 
             _context.Follows.Add(Follow);
             await SaveChangesAsync();
+
             return true;
         }
 

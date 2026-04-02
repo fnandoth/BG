@@ -114,26 +114,26 @@ namespace PostService.Controllers
 
         // ─── Get timeline ─────────────────────────────────────────────────────────
 
-        [HttpGet("timeline/{userId:guid}")]
+        [HttpGet("timeline/{displayName}")]
         public async Task<IActionResult> GetTimelineAsync(
-            Guid userId,
+            string displayName,
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 20)
         {
-            var timeline = await _postRepository.GetTimelineAsync(userId, page, pageSize);
+            var timeline = await _postRepository.GetTimelineAsync(displayName, page, pageSize);
             return Ok(timeline);
         }
 
         // ─── Get posts de un usuario ──────────────────────────────────────────────
 
         [AllowAnonymous]
-        [HttpGet("user/{userId:guid}")]
+        [HttpGet("user/{displayName}")]
         public async Task<IActionResult> GetUserPostsAsync(
-            Guid userId,
+            string displayName,
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 20)
         {
-            var posts = await _postRepository.GetUserPostsAsync(userId, page, pageSize);
+            var posts = await _postRepository.GetUserPostsAsync(displayName, page, pageSize);
             return Ok(posts);
         }
 
